@@ -15,7 +15,7 @@ function SignUp() {
     gender: '',
     emailOrPhone: '',
     password: '',
-    yearOfBirth: 0,
+    yearOfBirth: '',
     education: '',
     province: '',
   });
@@ -45,7 +45,7 @@ function SignUp() {
     };
 
     fetchData();
-  }, );
+  }, [backend_Url]);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
@@ -58,10 +58,28 @@ function SignUp() {
     });
   };
 
+  const validateYearOfBirth = (year) => {
+    const currentYear = new Date().getFullYear();
+    const minYear = 1900; // Minimum reasonable year
+    const maxYear = currentYear; // Maximum reasonable year (current year)
+
+    if (!year || isNaN(year) || year < minYear || year > maxYear) {
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate Year of Birth
+    if (!validateYearOfBirth(formData.yearOfBirth)) {
+      alert("Please enter a valid year of birth (between 1900 and the current year).");
+      return;
+    }
+
     setIsSubmitting(true);
-  
+
     try {
       const response = await axios.post(`${backend_Url}auth/register`, {
         username: formData.fullName,
@@ -70,13 +88,13 @@ function SignUp() {
         province: formData.province,
         gender: formData.gender,
         education: formData.education,
-        years_of_birth: formData.yearOfBirth, // Ensure this matches the backend's expected field name
+        years_of_birth: formData.yearOfBirth,
       }, {
         headers: {
           'APP_KEY': process.env.REACT_APP_APP_KEY
         }
       });
-    
+
       console.log(response.data);
       navigate('/login');
       alert('Registration successful! Redirecting to login page.');
@@ -187,6 +205,8 @@ function SignUp() {
                     className="w-full px-4 py-2 mt-1 border rounded-lg text-neutral-800 border-neutral-300 focus:ring-2 focus:ring-logocolor focus:outline-none focus:ring-offset-2"
                     required
                     onChange={handleChange}
+                    min="1900"
+                    max={new Date().getFullYear()}
                   />
                 </div>
                 <div>

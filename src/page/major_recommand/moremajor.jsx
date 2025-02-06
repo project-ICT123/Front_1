@@ -1,10 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import Draggable from "react-draggable";
 import Button from "../../components/button";
+import Strengthsandweaknesses from "../quiz_component/strengthsandweaknesse";
 
 function Moremajor() {
   const navigate = useNavigate();
+  const dragStartPosition = useRef({ x: 0, y: 0 });
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [careerData, setCareerData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -78,6 +81,27 @@ function Moremajor() {
     return () => controller.abort();
   }, [personalityType, token]);
 
+  const handleDragStart = (e, data) => {
+    dragStartPosition.current = { x: data.x, y: data.y };
+  };
+
+  const handleDragStop = (e, data) => {
+    const { x, y } = dragStartPosition.current;
+    const distanceMoved = Math.sqrt((data.x - x) ** 2 + (data.y - y) ** 2);
+
+    if (distanceMoved < 5) {
+      handleOpenModal();
+    }
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <main className="sm573:px-8 px-3">
       <header className="relative">
@@ -126,16 +150,16 @@ function Moremajor() {
               {careerData.length > 0 ? (
                 careerData.map((career, index) => <li key={index}>{career}</li>)
               ) : (
-                <p>No career data available.</p>
+                <p>Career loading...</p>
               )}
             </ul>
           )}
         </nav>
       </section>
 
-      <Draggable>
+      <Draggable onStart={handleDragStart} onStop={handleDragStop}>
         <nav className="flex justify-end lgm:mt-[13.5rem] h-[5rem] fixed bottom-[2rem] right-[2rem] items-center justify-center z-50">
-          <Button label="See More Major">
+          <Button label="See More Major" onClick={handleOpenModal}>
             <div className="flex flex-row items-center justify-center sm879:w-[10rem]">
               Strengths and Weaknesses
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="size-4">
@@ -145,6 +169,28 @@ function Moremajor() {
           </Button>
         </nav>
       </Draggable>
+
+      {/* Modal - StartQuiz */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="p-[1rem] max-w-4xl flex relative">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="size-12 text-gray hover:text-pink absolute top-[-1.5rem] right-[-1rem] m-4 cursor-pointer"
+              onClick={handleCloseModal}
+            >
+              <path
+                fillRule="evenodd"
+                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <Strengthsandweaknesses />
+          </div>
+        </div>
+      )}
     </main>
   );
 }
