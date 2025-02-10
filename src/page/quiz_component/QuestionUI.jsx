@@ -10,7 +10,7 @@ import MyImage6 from '../../image/16.png';
 import MyImage7 from '../../image/17.png';
 import MyImage8 from '../../image/18.png';
 
-const QuizUI = ({ questions }) => {
+const QuesionUI = ({ questions , testType }) => {
   const { userTestId } = useParams();
   const navigate = useNavigate();
   const APP_KEY = process.env.REACT_APP_APP_KEY;
@@ -18,7 +18,6 @@ const QuizUI = ({ questions }) => {
   const [selectedIndex, setSelectedIndex] = useState([]);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [isAnswerSelected, setIsAnswerSelected] = useState(false);
-  const [isSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleOptionClick = useCallback((index) => {
@@ -78,18 +77,27 @@ const QuizUI = ({ questions }) => {
       const data = await response.json();
       localStorage.setItem('testResults', JSON.stringify(data));
 
-      navigate('/major_test/view_result', {
-        state: {
-          results: data,
-          answersSelected: selectedIndex,
-        },
-      });
+      if (testType === 'major') {
+        navigate('/major_test/view_result', {
+          state: {
+            results: data,
+            answersSelected: selectedIndex,
+          },
+        });
+      } else if (testType === 'personal') {
+        navigate('/personal_test/view_result', {
+          state: {
+            results: data,
+            answersSelected: selectedIndex,
+          },
+        });
+      }
     } catch (error) {
       console.error('Error submitting quiz:', error);
     } finally {
       setLoading(false);
     }
-  }, [userTestId, selectedIndex, questions, APP_KEY, navigate]);
+  }, [userTestId, selectedIndex, questions, APP_KEY, navigate , testType]);
 
   const handleBackToQuiz = useCallback(() => {
     setQuizCompleted(false);
@@ -119,23 +127,12 @@ const QuizUI = ({ questions }) => {
     return images[currentQuestion % images.length];
   }, [currentQuestion, images]);
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
-        <p className="mt-4 text-lg font-semibold text-gray-700">
-          Submitting your quiz... Please wait 😊
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <main className="flex flex-col max-w-8xl mx-auto sm573:px-[2rem] sm573:py-[1rem] px-[1rem]">
-      <div className=''>
+    <main className="flex flex-col max-w-8xl mx-auto sm573:px-[2rem]  px-[1rem]">
+      <div className='mt-[1rem]'>
         <Button
           label="Go Back"
-          onClick={() => navigate('/')}
+          onClick={() => navigate(-1)} // Navigate to the previous page
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -151,9 +148,9 @@ const QuizUI = ({ questions }) => {
         </Button>
       </div>
 
-      <div className="flex flex-col sm879:flex-row justify-between items-center mx-auto lgd:gap-[10rem] mt-[2rem]">
+      <div className="flex flex-col sm879:flex-row justify-between items-center mx-auto lgd:gap-[10rem] ">
         <section>
-          <nav className="h-[15rem] sm573:w-[25rem] sm425:w-[24.5rem] sm375:w-[21.5rem] w-[18rem] bg-white rounded-xl shadow p-6 relative">
+          <nav className="h-[14.5rem] sm375:h-[13rem] sm573:w-[30rem] sm425:w-[24.5rem] sm375:w-[21.5rem] w-[18rem] p-6 relative">
             <div className="flex justify-between items-center">
               <button
                 onClick={handleBack}
@@ -190,11 +187,11 @@ const QuizUI = ({ questions }) => {
               <span className={`font-bold ${selectedIndex[currentQuestion] === 0 ? "text-logocolor" : "text-gray"}`}>
                 {firstAnswerCount}
               </span>
-              <div className="h-2 w-[100%] bg-bgcolor rounded-full relative">
+              <div className="h-2 w-[100%] bg-white rounded-full relative">
                 <div className="absolute top-0 left-0 h-2 bg-logocolor rounded-full" style={{ width: `${calculateProgress(firstAnswerCount, selectedIndex.length)}%` }} />
               </div>
 
-              <div className="h-2 w-[100%] bg-bgcolor rounded-full relative">
+              <div className="h-2 w-[100%] bg-white rounded-full relative">
                 <div className="absolute top-0 right-0 h-2 bg-pink rounded-full" style={{ width: `${calculateProgress(secondAnswerCount, selectedIndex.length)}%` }} />
               </div>
 
@@ -223,29 +220,30 @@ const QuizUI = ({ questions }) => {
           </nav>
 
           {!quizCompleted ? (
-            <div className="space-y-4 mt-[2rem]">
+            <div className="space-y-4 mt-[2rem] sm573:w-[30rem] sm425:w-[24.5rem] sm375:w-[21.5rem] w-[18rem]">
               {questions[currentQuestion].answers.map((answer, i) => (
                 <button
-                  key={i}
-                  className={`w-full py-3 px-4 rounded-lg text-left shadow bg-white transition 
-                    ${selectedIndex[currentQuestion] === i ? (i === 0 ? "text-logocolor" : "text-pink") : "text-black"} 
-                    ${i === 0 ? "hover:text-logocolor" : "hover:text-pink"}`}
-                  onClick={() => handleOptionClick(i)}
-                >
-                  <div className="flex justify-between items-center">
-                    <span>{answer}</span>
-                    {selectedIndex[currentQuestion] === i && (
-                      <svg className="w-5 h-5 text-gray-800 dark:text-white ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 16">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M7.293 1.707 1.707 7.293a1 1 0 0 0 0 1.414l5.586 5.586A1 1 0 0 0 9 13.586V2.414a1 1 0 0 0-1.707-.707Z" />
-                      </svg>
-                    )}
-                  </div>
-                </button>
+                key={i}
+                className={`w-full py-3 px-4 rounded-lg text-left transition text-start
+                  ${selectedIndex[currentQuestion] === i ? (i === 0 ? "text-logocolor" : "text-pink") : "text-black"} 
+                  ${i === 0 ? "hover:text-logocolor" : "hover:text-pink"}`}
+                onClick={() => handleOptionClick(i)}
+              >
+                <div className="flex justify-between items-start h-[1rem]">
+                  <span>{answer}</span>
+                  {selectedIndex[currentQuestion] === i && (
+                    <svg className="w-5 h-5 text-gray-800 dark:text-white ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 16">
+                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M7.293 1.707 1.707 7.293a1 1 0 0 0 0 1.414l5.586 5.586A1 1 0 0 0 9 13.586V2.414a1 1 0 0 0-1.707-.707Z" />
+                    </svg>
+                  )}
+                </div>
+              </button>
+              
               ))}
             </div>
           ) : (
-            <div className="text-center justify-center gap-2 mt-[-5px] ml-[1rem] flex flex-col w-[90%]">
-              <div className="text-center mt-[1.8rem]">
+            <div className="text-center justify-center gap-2 ml-[1rem] flex flex-col w-[90%] h-[5.8rem]">
+              <div className="text-center mt-[7rem]">
                 <p className="text-xl font-bold text-logocolor">
                   You've completed the quiz!
                 </p>
@@ -260,18 +258,27 @@ const QuizUI = ({ questions }) => {
                   className="bg-logocolor hover:bg-gray"
                 />
                 <Button
-                  label="Submit"
                   onClick={handleSubmit}
-                  disabled={isSubmitting}
-                  className={`bg-pink hover:bg-gray ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-                />
+                  disabled={loading}
+                  className={`bg-pink hover:bg-gray ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  {loading ? (
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                      Submitting...
+                    </div>
+                  ) : (
+                    "Submit"
+                  )}
+                </Button>
+
               </div>
             </div>
           )}
         </section>
 
         {!quizCompleted ? (
-          <section className="">
+          <section className="mt-[3rem]">
             <img
               src={getCurrentImage()}
               alt={`Question ${currentQuestion + 1}`}
@@ -279,7 +286,7 @@ const QuizUI = ({ questions }) => {
             />
           </section>
         ) : (
-          <section className="">
+          <section className="mt-3">
             <img
               src={MyImage4}
               alt="Completed"
@@ -292,4 +299,4 @@ const QuizUI = ({ questions }) => {
   );
 };
 
-export default QuizUI;
+export default QuesionUI;

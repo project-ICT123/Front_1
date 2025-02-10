@@ -4,15 +4,56 @@ import TraitsList from "./TraitsList";
 
 
 const traitsData = [
-  { initial: 'I', name: 'Introversion', bgColor: 'bg-blue' },
-  { initial: 'E', name: 'Extroversion', bgColor: 'bg-orange-500' },
-  { initial: 'N', name: 'Intuition', bgColor: 'bg-purple-500' },
-  { initial: 'S', name: 'Sensing', bgColor: 'bg-green-500' },
-  { initial: 'T', name: 'Thinking', bgColor: 'bg-gray' },
-  { initial: 'F', name: 'Feeling', bgColor: 'bg-pink' },
-  { initial: 'P', name: 'Perceiving', bgColor: 'bg-yellow-400' },
-  { initial: 'J', name: 'Judging', bgColor: 'bg-black' },
+  {
+    initial: 'I',
+    name: 'Introversion',
+    bgColor: 'bg-blue',
+    details: 'Introversion refers to a personality trait where individuals tend to focus on their inner world, feeling more comfortable in solitude or small groups.'
+  },
+  {
+    initial: 'E',
+    name: 'Extroversion',
+    bgColor: 'bg-orange-500',
+    details: 'Extroversion is characterized by a preference for being around others, drawing energy from social interactions and activities.'
+  },
+  {
+    initial: 'N',
+    name: 'Intuition',
+    bgColor: 'bg-purple-500',
+    details: 'Intuition is a trait where individuals tend to focus on future possibilities, abstract concepts, and patterns, often relying on gut feelings rather than concrete data.'
+  },
+  {
+    initial: 'S',
+    name: 'Sensing',
+    bgColor: 'bg-green-500',
+    details: 'Sensing refers to a personality trait where individuals prefer to focus on the present moment, using their senses to gather information from the environment.'
+  },
+  {
+    initial: 'T',
+    name: 'Thinking',
+    bgColor: 'bg-gray',
+    details: 'Thinking individuals tend to make decisions based on logic and objective analysis, focusing on facts and evidence rather than emotions.'
+  },
+  {
+    initial: 'F',
+    name: 'Feeling',
+    bgColor: 'bg-pink',
+    details: 'Feeling individuals prioritize personal values and emotions when making decisions, often considering the impact on others and fostering empathy.'
+  },
+  {
+    initial: 'P',
+    name: 'Perceiving',
+    bgColor: 'bg-yellow-400',
+    details: 'Perceiving refers to a preference for flexibility, spontaneity, and keeping options open. Perceiving types are often adaptable and like to go with the flow.'
+  },
+  {
+    initial: 'J',
+    name: 'Judging',
+    bgColor: 'bg-black',
+    details: 'Judging individuals prefer structure, organization, and planning. They tend to make decisions quickly and value predictability and closure.'
+  },
 ];
+
 
 const personalityTypes = [
   { initial: 'ENFP' },
@@ -37,7 +78,7 @@ const personalityTypes = [
 
 
 
-const PersonalityTraitsList = ({ typeqcm, destination }) => {
+const PersonalityTraitsList = ({ typeqcm, destination , testType }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -118,7 +159,11 @@ const PersonalityTraitsList = ({ typeqcm, destination }) => {
                 clipRule="evenodd"
               />
             </svg>
-            <StartQuiz typeqcm={typeqcm} destination={destination} />
+            <StartQuiz 
+              typeqcm={typeqcm}  
+              destination={destination} 
+              testType={testType}
+            />
           </div>
         </div>
       )}

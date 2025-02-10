@@ -1,17 +1,20 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import axios from "axios";
 import Button from "../../components/button";
 import { useNavigate } from "react-router-dom";
 
-function StartQuiz({ typeqcm, destination }) {
+function StartQuiz({ typeqcm, destination , testType }) {
   const navigate = useNavigate();
   const tokenRef = useRef(localStorage.getItem("token")); // Store token in a ref to avoid re-fetching on every render
+  const [isLoading, setIsLoading] = useState(false); // Track loading state
 
   const handleStartQuiz = useCallback(async () => {
     if (!tokenRef.current) {
       navigate("/login");
       return;
     }
+
+    setIsLoading(true); // Start loading animation
 
     try {
       const BASE_URL_SERVER = process.env.REACT_APP_BASE_URL_SERVER;
@@ -32,15 +35,21 @@ function StartQuiz({ typeqcm, destination }) {
       );
 
       if (response.data?.id) {
-        navigate(`${destination}/${encodeURIComponent(response.data.id)}`);
+        navigate(`${destination}/${encodeURIComponent(response.data.id)}`, {
+          state: {
+            testType: testType, // Pass testType in the navigation state
+          },
+        });
       } else {
         throw new Error("User test ID missing in response.");
       }
     } catch (error) {
       console.error("Error adding user test:", error.response || error);
       alert("Failed to start the quiz. Please try again.");
+    } finally {
+      setIsLoading(false); // Stop loading animation after navigation or error
     }
-  }, [navigate, destination, typeqcm]);
+  }, [navigate, destination, typeqcm , testType]);
 
   return (
     <main className="flex justify-center items-center p-6">
@@ -56,12 +65,19 @@ function StartQuiz({ typeqcm, destination }) {
           expected of you.
         </p>
         <div className="flex justify-center items-center">
-          <Button label="Continue" onClick={handleStartQuiz}>
-            Continue
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="size-4">
-              <path strokeLinecap="round" strokeLinejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
-            </svg>
-          </Button>
+          {isLoading ? (
+            <Button>
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+              Loading...
+            </Button>
+          ) : (
+            <Button label="Continue" onClick={handleStartQuiz}>
+              Continue
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="size-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
+              </svg>
+            </Button>
+          )}
         </div>
       </nav>
     </main>

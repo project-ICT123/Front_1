@@ -73,10 +73,6 @@ const Navbar = () => {
               className="w-[70px] md:w-[80px] lg:w-[100px]"
             />
           </Link>
-          <Link to="/">
-            <span className="ml-[-5px] text-logocolor font-bold text-xl">Namplov</span>
-          </Link>
-          
         </div>
 
         {/* Desktop Links */}

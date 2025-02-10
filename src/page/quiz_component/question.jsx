@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import QuestionUI from "../quiz_component/QuestionUI";
+import { useLocation } from 'react-router-dom';
 
-function QuestionMajor() {
+import axios from "axios";
+import QuestionUI from "./QuestionUI";
+
+function Question() {
   const [questionData, setQuestionData] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const location = useLocation();
+  const { testType } = location.state || {};
 
   useEffect(() => {
     const fetchQuestion = async () => {
@@ -15,7 +18,6 @@ function QuestionMajor() {
 
         if (!token) {
           setError("No token found.");
-          setLoading(false);
           return;
         }
 
@@ -23,7 +25,6 @@ function QuestionMajor() {
         const cachedData = localStorage.getItem("cachedQuestionData");
         if (cachedData) {
           setQuestionData(JSON.parse(cachedData));
-          setLoading(false);
           return;
         }
 
@@ -50,24 +51,12 @@ function QuestionMajor() {
       } catch (err) {
         setError("Failed to fetch question data");
         console.error(err);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
     fetchQuestion();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
-        <p className="mt-4 text-lg font-semibold text-gray-700">
-          Loading questions... Please wait for 70 questions.😊
-        </p>
-      </div>
-    );
-  }
 
   if (error) {
     return (
@@ -77,7 +66,8 @@ function QuestionMajor() {
     );
   }
 
-  return <QuestionUI questions={questionData} />;
+  // Render QuestionUI only when questionData is not null
+  return questionData ? <QuestionUI questions={questionData} testType={testType} /> : null;
 }
 
-export default React.memo(QuestionMajor);
+export default React.memo(Question);

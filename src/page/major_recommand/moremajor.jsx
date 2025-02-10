@@ -160,7 +160,7 @@ function Moremajor() {
       <Draggable onStart={handleDragStart} onStop={handleDragStop}>
         <nav className="flex justify-end lgm:mt-[13.5rem] h-[5rem] fixed bottom-[2rem] right-[2rem] items-center justify-center z-50">
           <Button label="See More Major" onClick={handleOpenModal}>
-            <div className="flex flex-row items-center justify-center sm879:w-[10rem]">
+            <div className="flex flex-row items-center justify-center sm879:w-[15rem]">
               Strengths and Weaknesses
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="size-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
@@ -170,7 +170,7 @@ function Moremajor() {
         </nav>
       </Draggable>
 
-      {/* Modal - StartQuiz */}
+      {/* Modal - Strengths and Weaknesses */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="p-[1rem] max-w-4xl flex relative">

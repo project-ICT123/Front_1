@@ -8,13 +8,11 @@ import Login from './auth/login';
 import Signup from './auth/signup';
 import ProfilePage from './page/User/account';
 import Personal from './page/personal_test/personal';
-import QuestionMajor from './page/major_recommand/questionMajor';
-import QuestionPersonal from './page/personal_test/questionPersonal';
+import Question from './page/quiz_component/question';
 import MajorRecommand from './page/major_recommand/majorRecommand';
 import Navbar from './asset/Navbar';
-import StartQuiz  from './page/quiz_component/startQuiz';
 import SeeResult from './page/quiz_component/seeresult';
-import Result  from './page/quiz_component/result';
+import Result  from './page/major_recommand/result';
 
 import Moremajor from './page/major_recommand/moremajor';
 
@@ -49,21 +47,18 @@ root.render(
           <Route path="/signup" element={<Signup />} />
           <Route path="/youracc" element={<ProfilePage />} />
           
-          {/* Test Routes */}
-          <Route path="/personality_test" element={<Personal />} />
+          {/* Major Test Routes */}
           <Route path="/major_test" element={<MajorRecommand />} />
-          <Route path="/major_test/view_result/result/more_major_that_fit_you" element={<Moremajor />} />
-
-
-          {/* Question Routes */}
-          <Route path="/personal_test/all_question/personality" element={<QuestionPersonal />} />
-          <Route path="/major_test/all_question/major/:userTestId" element={<QuestionMajor />} />
+          <Route path="/major_test/all_question/major/:userTestId" element={<Question />} />
           <Route path="/major_test/view_result" element={<SeeResult />} />
           <Route path="/major_test/view_result/result" element={<Result />} />
+          <Route path="/major_test/view_result/result/more_major_that_fit_you" element={<Moremajor />} />
 
+          {/* Personal Test Routes */}
+          <Route path="/personality_test" element={<Personal />} />
+          <Route path="/personal_test/all_question/personality/:userTestId" element={<Question />} />
+          <Route path="/personal_test/view_result" element={<SeeResult />} />
 
-          <Route path="/all_question/:typeqcm" element={<StartQuiz />} />
-          
         </Routes>
       </Layout>
     </BrowserRouter>

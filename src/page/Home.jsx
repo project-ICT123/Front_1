@@ -67,7 +67,7 @@ const HomePage = () => {
           />
         </Link>
 
-        <Link to="/online">
+        <Link to="/personality_test">
           <Card
             imageSrc={person}
             title="Personality Test"

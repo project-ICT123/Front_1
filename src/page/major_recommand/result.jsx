@@ -65,14 +65,54 @@ const Result = () => {
     };
 
     const traitsData = [
-        { initial: 'I', name: 'Introversion', bgColor: 'bg-blue' },
-        { initial: 'E', name: 'Extroversion', bgColor: 'bg-orange-500' },
-        { initial: 'N', name: 'Intuition', bgColor: 'bg-purple-500' },
-        { initial: 'S', name: 'Sensing', bgColor: 'bg-green-500' },
-        { initial: 'T', name: 'Thinking', bgColor: 'bg-gray' },
-        { initial: 'F', name: 'Feeling', bgColor: 'bg-pink' },
-        { initial: 'P', name: 'Perceiving', bgColor: 'bg-yellow-400' },
-        { initial: 'J', name: 'Judging', bgColor: 'bg-black' },
+      {
+        initial: 'I',
+        name: 'Introversion',
+        bgColor: 'bg-blue',
+        details: 'Introversion refers to a personality trait where individuals tend to focus on their inner world, feeling more comfortable in solitude or small groups.'
+      },
+      {
+        initial: 'E',
+        name: 'Extroversion',
+        bgColor: 'bg-orange-500',
+        details: 'Extroversion is characterized by a preference for being around others, drawing energy from social interactions and activities.'
+      },
+      {
+        initial: 'N',
+        name: 'Intuition',
+        bgColor: 'bg-purple-500',
+        details: 'Intuition is a trait where individuals tend to focus on future possibilities, abstract concepts, and patterns, often relying on gut feelings rather than concrete data.'
+      },
+      {
+        initial: 'S',
+        name: 'Sensing',
+        bgColor: 'bg-green-500',
+        details: 'Sensing refers to a personality trait where individuals prefer to focus on the present moment, using their senses to gather information from the environment.'
+      },
+      {
+        initial: 'T',
+        name: 'Thinking',
+        bgColor: 'bg-gray',
+        details: 'Thinking individuals tend to make decisions based on logic and objective analysis, focusing on facts and evidence rather than emotions.'
+      },
+      {
+        initial: 'F',
+        name: 'Feeling',
+        bgColor: 'bg-pink',
+        details: 'Feeling individuals prioritize personal values and emotions when making decisions, often considering the impact on others and fostering empathy.'
+      },
+      {
+        initial: 'P',
+        name: 'Perceiving',
+        bgColor: 'bg-yellow-400',
+        details: 'Perceiving refers to a preference for flexibility, spontaneity, and keeping options open. Perceiving types are often adaptable and like to go with the flow.'
+      },
+      {
+        initial: 'J',
+        name: 'Judging',
+        bgColor: 'bg-black',
+        details: 'Judging individuals prefer structure, organization, and planning. They tend to make decisions quickly and value predictability and closure.'
+      },
     ];
 
     return (
@@ -110,7 +150,7 @@ const Result = () => {
                 Discover your personality type and the majors that suit you best.
               </p>
               <div className="mt-[2rem] lgl:py-[4.5rem] py-[1.9rem] lgm:w-[30rem] lgl:w-[40rem] bg-white rounded-2xl">
-                <TraitsList traitsData={traitsData} />
+                <TraitsList traitsData={traitsData}  />
               </div>
             </nav>
             <nav className="flex flex-col">
@@ -132,13 +172,18 @@ const Result = () => {
                       <li key={index}>{item}</li>
                     ))}
                   </ul>
-                  <p className="text-sm font-bold sm:text-base md:text-lg text-logocolor sm375:mb-40 sm425:mt-5">
+                  <p className="text-sm font-bold sm:text-base md:text-lg text-logocolor sm425:mt-5">
                     Focus : <span className="text-gray font-normal">{focuses_en}</span>
                   </p>
                 </nav>
                 <Draggable disabled={!isSmallScreen} onStart={handleDragStart} onStop={handleDragStop}>
-                  <nav className="flex justify-end lgm:mt-[13.5rem] h-[5rem] fixed lgs:static bottom-[2rem] right-[2rem]">
-                    <Button label="See More Major" onClick={handleClick}>See more majors that fit you</Button>
+                  <nav className="flex justify-end lgm:mt-[11.8rem] h-[4rem] fixed lgs:static bottom-[2rem] right-[2rem]">
+                    <Button label="See More Major" onClick={handleClick}>
+                      See more majors that fit you
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="size-4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
+                      </svg>
+                    </Button>
                   </nav>
                 </Draggable>
               </div>
