@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import Button from "../../components/button";
 import MyImage1 from '../../image/11.png';
 import MyImage2 from '../../image/12.png';
@@ -10,7 +10,7 @@ import MyImage6 from '../../image/16.png';
 import MyImage7 from '../../image/17.png';
 import MyImage8 from '../../image/18.png';
 
-const QuesionUI = ({ questions , testType }) => {
+const QuesionUI = ({ questions }) => {
   const { userTestId } = useParams();
   const navigate = useNavigate();
   const APP_KEY = process.env.REACT_APP_APP_KEY;
@@ -19,6 +19,9 @@ const QuesionUI = ({ questions , testType }) => {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [isAnswerSelected, setIsAnswerSelected] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const location = useLocation();
+  const { testType } = location.state || {};
 
   const handleOptionClick = useCallback((index) => {
     const updatedSelection = [...selectedIndex];
@@ -82,6 +85,7 @@ const QuesionUI = ({ questions , testType }) => {
           state: {
             results: data,
             answersSelected: selectedIndex,
+            testType: 'major'
           },
         });
       } else if (testType === 'personal') {
@@ -89,6 +93,7 @@ const QuesionUI = ({ questions , testType }) => {
           state: {
             results: data,
             answersSelected: selectedIndex,
+            testType: 'personal'
           },
         });
       }

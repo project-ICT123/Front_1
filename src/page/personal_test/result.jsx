@@ -1,6 +1,8 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import React, { useState, useEffect, useRef } from 'react';
 import Draggable from 'react-draggable';
+import Strengthsandweaknesses from "../quiz_component/strengthsandweaknesse";
+
 
 import Button from "../../components/button";
 import TraitsList from "../../asset/TraitsList";
@@ -52,17 +54,22 @@ const Result = () => {
       const distanceMoved = Math.sqrt((data.x - x) ** 2 + (data.y - y) ** 2);
 
       // If the user moved less than 5 pixels, consider it a click
-      if (distanceMoved < 5) {
-          navigate('/major_test/view_result/result/more_major_that_fit_you'); // Navigate only if the user didn't drag
+      if (distanceMoved < 5 && !isDragging) {  // Open modal only if drag distance is small
+        handleOpenModal();
       }
 
       setIsDragging(false); // User stopped dragging
       };
 
-      const handleClick = () => {
-          if (!isSmallScreen) {
-              navigate('/major_test/view_result/result/more_major_that_fit_you');
-          }
+      const [isModalOpen, setIsModalOpen] = useState(false);
+      
+
+      const handleOpenModal = () => {
+        setIsModalOpen(true);
+      };
+    
+      const handleCloseModal = () => {
+        setIsModalOpen(false);
       };
 
     const traitsData = [
@@ -164,29 +171,40 @@ const Result = () => {
                 </p>
               </div>
               <div className="flex flex-col lgm:flex-row gap-[2rem]">
-                <nav className="p-5 bg-white rounded-2xl mt-[2rem] lgm:mt-[2.5rem] max-w-5xl">
-                  <p className="text-sm font-bold sm:text-base md:text-lg text-logocolor mb-2">
-                    Occupation/Major Trend :
-                  </p>
-                  <ul className="list-disc list-inside text-gray text-sm sm:text-base md:text-lg">
-                    {occupations_en.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
-                  <p className="text-sm font-bold sm:text-base md:text-lg text-logocolor sm425:mt-5">
-                    Focus : <span className="text-gray font-normal">{focuses_en}</span>
-                  </p>
-                </nav>
-                <Draggable disabled={!isSmallScreen} onStart={handleDragStart} onStop={handleDragStop}>
-                  <nav className="flex justify-end lgm:mt-[11.8rem] h-[4rem] fixed lgs:static bottom-[2rem] right-[2rem]">
-                    <Button label="See More Major" onClick={handleClick}>
-                      See more majors that fit you
+              <Draggable onStart={handleDragStart} onStop={handleDragStop}>
+                <nav className="flex justify-end lgm:mt-[13.5rem] h-[5rem] fixed bottom-[2rem] right-[2rem] items-center justify-center z-50">
+                  <Button label="See More Major" onClick={handleOpenModal}>
+                    <div className="flex flex-row items-center justify-center sm879:w-[15rem]">
+                      Strengths and Weaknesses
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="size-4">
                         <path strokeLinecap="round" strokeLinejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
                       </svg>
-                    </Button>
-                  </nav>
-                </Draggable>
+                    </div>
+                  </Button>
+                </nav>
+              </Draggable>
+
+                {/* Modal - Strengths and Weaknesses */}
+                {isModalOpen && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                    <div className="p-[1rem] max-w-4xl flex relative">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="size-12 text-gray hover:text-pink absolute top-[-1.5rem] right-[-1rem] m-4 cursor-pointer"
+                        onClick={handleCloseModal}
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <Strengthsandweaknesses />
+                    </div>
+                  </div>
+                )}
               </div>
             </nav>
           </section>

@@ -1,15 +1,26 @@
 import React from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Button from "../../components/button";
 import Congratulations from "../../asset/Congratulations";
 
-
 const SeeResult = () => {
-    const navigate = useNavigate(); 
-    
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { testType } = location.state || {}; // Retrieve testType from location state
+
+    const handleViewResult = () => {
+        if (testType === 'major') {
+            navigate('/major_test/view_result/result');
+        } else if (testType === 'personal') {
+            navigate('/personal_test/view_result/result');
+        } else {
+            console.error("testType is undefined or invalid");
+        }
+    };
+
     return (
         <main className='sm573:px-8 sm573:py-4 px-4 relative'>
-            <Congratulations/>
+            <Congratulations />
             <header className="relative z-10">
                 <Button
                     label="Go Back"
@@ -23,13 +34,13 @@ const SeeResult = () => {
                         stroke="currentColor"
                         className="size-4 mr-[5px] mt-[-1px]"
                     >
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
                     </svg>
                     Go Back
                 </Button>
             </header>
             <section className="flex flex-col items-center justify-center h-[35rem] relative z-10">
-                <div> 
+                <div>
                     <h1 className="text-center text-xl sm:text-2xl md:text-3xl font-semibold text-logocolor mb-5">
                         Great Job !
                     </h1>
@@ -39,8 +50,8 @@ const SeeResult = () => {
                 </div>
                 <div className="flex items-center justify-center">
                     <Button
-                        label="Got to view result"
-                        onClick={() => navigate('/major_test/view_result/result')}
+                        label="Go to view result"
+                        onClick={handleViewResult}
                     >
                         See your result
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="size-4">

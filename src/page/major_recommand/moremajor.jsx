@@ -11,6 +11,7 @@ function Moremajor() {
   const [careerData, setCareerData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);  // Flag to track if it's a drag or a click
 
   // Read test results and token once
   const testResults = useMemo(() => {
@@ -83,15 +84,18 @@ function Moremajor() {
 
   const handleDragStart = (e, data) => {
     dragStartPosition.current = { x: data.x, y: data.y };
+    setIsDragging(true);  // Indicate the drag has started
   };
 
   const handleDragStop = (e, data) => {
     const { x, y } = dragStartPosition.current;
     const distanceMoved = Math.sqrt((data.x - x) ** 2 + (data.y - y) ** 2);
 
-    if (distanceMoved < 5) {
+    if (distanceMoved < 5 && !isDragging) {  // Open modal only if drag distance is small
       handleOpenModal();
     }
+
+    setIsDragging(false);  // Reset the dragging flag
   };
 
   const handleOpenModal = () => {

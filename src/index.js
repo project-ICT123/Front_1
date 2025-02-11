@@ -13,6 +13,8 @@ import MajorRecommand from './page/major_recommand/majorRecommand';
 import Navbar from './asset/Navbar';
 import SeeResult from './page/quiz_component/seeresult';
 import Result  from './page/major_recommand/result';
+import Results  from './page/personal_test/result';
+
 
 import Moremajor from './page/major_recommand/moremajor';
 
@@ -58,6 +60,7 @@ root.render(
           <Route path="/personality_test" element={<Personal />} />
           <Route path="/personal_test/all_question/personality/:userTestId" element={<Question />} />
           <Route path="/personal_test/view_result" element={<SeeResult />} />
+          <Route path="/personal_test/view_result/result" element={<Results />} />
 
         </Routes>
       </Layout>

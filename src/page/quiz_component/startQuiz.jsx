@@ -10,6 +10,7 @@ function StartQuiz({ typeqcm, destination , testType }) {
 
   const handleStartQuiz = useCallback(async () => {
     if (!tokenRef.current) {
+      // If no token, navigate to login
       navigate("/login");
       return;
     }
@@ -35,6 +36,7 @@ function StartQuiz({ typeqcm, destination , testType }) {
       );
 
       if (response.data?.id) {
+        // Redirect to the next page after successful response
         navigate(`${destination}/${encodeURIComponent(response.data.id)}`, {
           state: {
             testType: testType, // Pass testType in the navigation state
