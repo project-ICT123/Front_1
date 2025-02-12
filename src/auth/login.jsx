@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import pic from "../image/apple.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Button from "../components/button";
+import Notification from "../asset/Notification";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -12,14 +13,15 @@ function Login() {
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const [notification, setNotification] = useState(null);
+  const typeqcm = location.state?.typeqcm; // Get typeqcm from location state
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
     });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -50,13 +52,25 @@ function Login() {
       }, {
           headers: { "APP_KEY": APP_KEY },
       });
+      
 
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
       }
 
-      alert("Login successful! Redirecting to your dashboard.");
-      navigate("/");
+      setNotification({
+        type: "success",
+        message: "Login successful! Redirecting...",
+      });
+
+      // Redirect based on typeqcm
+      if (typeqcm === "Major Recommend") {
+        navigate("/major_test");
+      } else if (typeqcm === "Personality test") {
+        navigate("/personality_test");
+      } else {
+        navigate("/"); // Default redirect if typeqcm is not specified
+      }
     } catch (error) {
       if (error.response) {
         setError(
@@ -67,13 +81,28 @@ function Login() {
       } else {
         setError("An error occurred. Please check your connection and try again.");
       }
+      setNotification({
+        type: "error",
+        message: "Login failed. Please try again.",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const closeNotification = () => {
+    setNotification(null);
+  };
+
   return (
     <main className="min-h-screen">
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={closeNotification}
+        />
+      )}
       <div className="absolute p-[2rem]">
         <Button label="Go Back" onClick={() => navigate('/')}>Go Back</Button>
       </div>

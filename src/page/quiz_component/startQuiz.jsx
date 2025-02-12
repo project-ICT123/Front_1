@@ -10,8 +10,8 @@ function StartQuiz({ typeqcm, destination , testType }) {
 
   const handleStartQuiz = useCallback(async () => {
     if (!tokenRef.current) {
-      // If no token, navigate to login
-      navigate("/login");
+      // If no token, navigate to login with typeqcm state
+      navigate("/login", { state: { typeqcm } });
       return;
     }
 
